@@ -9,20 +9,31 @@ import { GitBranch } from "lucide-react";
 const GROUP_LETTERS = Object.keys(GROUPS);
 
 // ─── Resolve team for a slot ─────────────────────────────────────────────────
-function resolveSlotTeam(slot, groupStandings, thirdSlotAssignment, bracketScores) {
+import { isGroupComplete } from "../utils/groupLogic";
+
+function resolveSlotTeam(slot, groupStandings, thirdSlotAssignment, bracketScores, scoresMap) {
   if (!slot) return null;
 
-  if (slot.type === "group1") return groupStandings[slot.group]?.[0] || null;
-  if (slot.type === "group2") return groupStandings[slot.group]?.[1] || null;
-  if (slot.type === "third")  return thirdSlotAssignment[slot.match] || null;
+  if (slot.type === "group1" || slot.type === "group2") {
+    // Only show if the specific group has all 6 matches completed
+    if (!isGroupComplete(slot.group, GROUP_MATCHES[slot.group], scoresMap)) return null;
+    return slot.type === "group1" ? groupStandings[slot.group]?.[0] : groupStandings[slot.group]?.[1];
+  }
+
+  if (slot.type === "third") {
+    // Third place assignments are only mathematically final when ALL 12 groups are done
+    const allGroupsDone = GROUP_LETTERS.every(g => isGroupComplete(g, GROUP_MATCHES[g], scoresMap));
+    if (!allGroupsDone) return null;
+    return thirdSlotAssignment[slot.match] || null;
+  }
 
   if (slot.type === "winner" || slot.type === "loser") {
     const sc = bracketScores[slot.match];
     const prevMatch = BRACKET_MATCHES[slot.match];
     if (!prevMatch) return null;
 
-    const team1 = resolveSlotTeam(prevMatch.homeSlot, groupStandings, thirdSlotAssignment, bracketScores);
-    const team2 = resolveSlotTeam(prevMatch.awaySlot, groupStandings, thirdSlotAssignment, bracketScores);
+    const team1 = resolveSlotTeam(prevMatch.homeSlot, groupStandings, thirdSlotAssignment, bracketScores, scoresMap);
+    const team2 = resolveSlotTeam(prevMatch.awaySlot, groupStandings, thirdSlotAssignment, bracketScores, scoresMap);
 
     if (!sc || sc.g1 === "" || sc.g2 === "") return null;
 
@@ -90,6 +101,7 @@ export default function BracketPage({ scoresMap, bracketScores, onBracketScoreCh
             groupStandings={groupStandings}
             thirdSlotAssignment={thirdSlotAssignment}
             bracketScores={bracketScores}
+            scoresMap={scoresMap}
             onBracketScoreChange={onBracketScoreChange}
           />
         ))}
@@ -98,7 +110,7 @@ export default function BracketPage({ scoresMap, bracketScores, onBracketScoreCh
   );
 }
 
-function RoundSection({ roundKey, label, matchIds, groupStandings, thirdSlotAssignment, bracketScores, onBracketScoreChange }) {
+function RoundSection({ roundKey, label, matchIds, groupStandings, thirdSlotAssignment, bracketScores, scoresMap, onBracketScoreChange }) {
   const isFinalRound = roundKey === "FIN";
   const isThirdPlaceRound = roundKey === "TPF";
 
@@ -132,8 +144,8 @@ function RoundSection({ roundKey, label, matchIds, groupStandings, thirdSlotAssi
             const matchDef = BRACKET_MATCHES[id];
             if (!matchDef) return null;
 
-            const team1 = resolveSlotTeam(matchDef.homeSlot, groupStandings, thirdSlotAssignment, bracketScores);
-            const team2 = resolveSlotTeam(matchDef.awaySlot, groupStandings, thirdSlotAssignment, bracketScores);
+            const team1 = resolveSlotTeam(matchDef.homeSlot, groupStandings, thirdSlotAssignment, bracketScores, scoresMap);
+            const team2 = resolveSlotTeam(matchDef.awaySlot, groupStandings, thirdSlotAssignment, bracketScores, scoresMap);
 
             return (
               <div key={id} className="flex flex-col items-center gap-1">

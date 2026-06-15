@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import MatchInput from "./MatchInput";
 import StandingsTable from "./StandingsTable";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-export default function GroupCard({ groupLetter, teams, matches, scoresMap, standings, onScoreChange }) {
+const GroupCard = memo(function GroupCard({ groupLetter, teams, matches, scoresMap, standings, onScoreChange }) {
   const [expanded, setExpanded] = useState(true);
 
   const matchesWithTeams = matches.map((m) => ({
@@ -90,4 +90,15 @@ export default function GroupCard({ groupLetter, teams, matches, scoresMap, stan
       )}
     </div>
   );
-}
+}, (prev, next) => {
+  if (prev.groupLetter !== next.groupLetter) return false;
+  // Only re-render if a score in THIS specific group changed.
+  // We ignore new 'standings' array references if the group's scores didn't change.
+  for (let i = 0; i < 6; i++) {
+    const key = `${prev.groupLetter}_${i}`;
+    if (prev.scoresMap[key] !== next.scoresMap[key]) return false;
+  }
+  return true;
+});
+
+export default GroupCard;

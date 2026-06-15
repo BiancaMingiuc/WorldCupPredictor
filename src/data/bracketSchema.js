@@ -19,7 +19,7 @@ export const BRACKET_MATCHES = {
     id: 74, round: "R32", label: "Meci 74",
     venue: "Boston, SUA", date: "28 iunie",
     homeSlot: { type: "group1", group: "E" },
-    awaySlot: { type: "third", groups: ["A","B","C","D","F"] },
+    awaySlot: { type: "third", match: 74 }, // best 3rd from A/B/C/D/F
   },
   75: {
     id: 75, round: "R32", label: "Meci 75",
@@ -37,7 +37,7 @@ export const BRACKET_MATCHES = {
     id: 77, round: "R32", label: "Meci 77",
     venue: "New York, SUA", date: "30 iunie",
     homeSlot: { type: "group1", group: "I" },
-    awaySlot: { type: "third", groups: ["C","D","F","G","H"] },
+    awaySlot: { type: "third", match: 77 }, // best 3rd from C/D/F/G/H
   },
   78: {
     id: 78, round: "R32", label: "Meci 78",
@@ -49,25 +49,25 @@ export const BRACKET_MATCHES = {
     id: 79, round: "R32", label: "Meci 79",
     venue: "Mexico City, Mexic", date: "30 iunie",
     homeSlot: { type: "group1", group: "A" },
-    awaySlot: { type: "third", groups: ["C","E","F","H","I"] },
+    awaySlot: { type: "third", match: 79 }, // best 3rd from C/E/F/H/I
   },
   80: {
     id: 80, round: "R32", label: "Meci 80",
     venue: "Atlanta, SUA", date: "1 iulie",
     homeSlot: { type: "group1", group: "L" },
-    awaySlot: { type: "third", groups: ["E","H","I","J","K"] },
+    awaySlot: { type: "third", match: 80 }, // best 3rd from E/H/I/J/K
   },
   81: {
     id: 81, round: "R32", label: "Meci 81",
     venue: "San Francisco, SUA", date: "1 iulie",
     homeSlot: { type: "group1", group: "D" },
-    awaySlot: { type: "third", groups: ["B","E","F","I","J"] },
+    awaySlot: { type: "third", match: 81 }, // best 3rd from B/E/F/I/J
   },
   82: {
     id: 82, round: "R32", label: "Meci 82",
     venue: "Seattle, SUA", date: "1 iulie",
     homeSlot: { type: "group1", group: "G" },
-    awaySlot: { type: "third", groups: ["A","E","H","I","J"] },
+    awaySlot: { type: "third", match: 82 }, // best 3rd from A/E/H/I/J
   },
   83: {
     id: 83, round: "R32", label: "Meci 83",
@@ -85,7 +85,7 @@ export const BRACKET_MATCHES = {
     id: 85, round: "R32", label: "Meci 85",
     venue: "Vancouver, Canada", date: "2 iulie",
     homeSlot: { type: "group1", group: "B" },
-    awaySlot: { type: "third", groups: ["E","F","G","I","J"] },
+    awaySlot: { type: "third", match: 85 }, // best 3rd from E/F/G/I/J
   },
   86: {
     id: 86, round: "R32", label: "Meci 86",
@@ -97,7 +97,7 @@ export const BRACKET_MATCHES = {
     id: 87, round: "R32", label: "Meci 87",
     venue: "Kansas, SUA", date: "3 iulie",
     homeSlot: { type: "group1", group: "K" },
-    awaySlot: { type: "third", groups: ["D","E","I","J","L"] },
+    awaySlot: { type: "third", match: 87 }, // best 3rd from D/E/I/J/L
   },
   88: {
     id: 88, round: "R32", label: "Meci 88",

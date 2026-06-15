@@ -3,15 +3,14 @@
 
 export function computeThirdPlaceRanking(groupStandings) {
   // groupStandings: { A: [...4 teams sorted], B: [...], ... }
-  // We take index 2 from each group (3rd place)
+  // We take index 2 from each group (3rd place) — always, even if 0 games played
   const thirds = [];
 
   for (const [group, standings] of Object.entries(groupStandings)) {
     if (standings && standings.length === 4) {
       const t = standings[2];
-      if (t.gp >= 1) {
-        thirds.push({ ...t, group });
-      }
+      // Always include, mark as partial if no matches played yet
+      thirds.push({ ...t, group, isPartial: t.gp === 0 });
     }
   }
 

@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Prevent font size inflation on mobile */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    /* Safe area for notched phones */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
+  }
+
+  /* Remove tap highlight on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Better touch target for buttons */
+  button {
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  /* Smooth scrolling for overflow containers */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0A0F;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2a2a3a;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a5a;
+  }
+
+  /* Remove number input arrows globally */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@layer utilities {
+  .text-neon-green { color: #00FF87; }
+  .text-magenta    { color: #FF004D; }
+  .text-purple-wc  { color: #7A00FF; }
+  .text-cyan-wc    { color: #00E5FF; }
+
+  .bg-neon-green   { background-color: #00FF87; }
+  .bg-magenta      { background-color: #FF004D; }
+  .bg-purple-wc    { background-color: #7A00FF; }
+  .bg-cyan-wc      { background-color: #00E5FF; }
+
+  .border-neon-green { border-color: #00FF87; }
+  .border-magenta    { border-color: #FF004D; }
+  .border-purple-wc  { border-color: #7A00FF; }
+  .border-cyan-wc    { border-color: #00E5FF; }
+
+  /* Glow effects */
+  .glow-green  { box-shadow: 0 0 20px rgba(0, 255, 135, 0.3); }
+  .glow-purple { box-shadow: 0 0 20px rgba(122, 0, 255, 0.3); }
+  .glow-cyan   { box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
+  .glow-red    { box-shadow: 0 0 20px rgba(255, 0, 77, 0.3); }
+}

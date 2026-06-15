@@ -79,7 +79,8 @@ const GroupCard = memo(function GroupCard({ groupLetter, teams, matches, scoresM
                 key={m.idx}
                 match={m}
                 score={scoresMap[`${groupLetter}_${m.idx}`]}
-                onChange={(sc) => onScoreChange(groupLetter, m.idx, sc)}
+                groupLetter={groupLetter}
+                onScoreChange={onScoreChange}
               />
             ))}
           </div>

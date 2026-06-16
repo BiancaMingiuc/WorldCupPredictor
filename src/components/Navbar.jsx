@@ -62,12 +62,12 @@ export default function Navbar({ activeTab, onTabChange, onReset, user, onSignOu
       {/* Tab navigation */}
       <div className="bg-black/90 backdrop-blur-md border-b border-white/5">
         <div className="max-w-screen-2xl mx-auto px-1 sm:px-4">
-          <nav className="flex">
+          <nav className="flex overflow-x-auto snap-x scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
             {TABS.map(({ id, label, shortLabel, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => onTabChange(id)}
-                className={`relative flex-1 sm:flex-none flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 px-2 sm:px-5 py-3 sm:py-4 text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                className={`snap-start relative shrink-0 flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 px-4 sm:px-5 py-3 sm:py-4 text-xs sm:text-sm font-semibold transition-all duration-200 ${
                   activeTab === id ? "text-white" : "text-white/40 hover:text-white/70"
                 }`}
               >

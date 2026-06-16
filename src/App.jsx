@@ -17,7 +17,7 @@ export default function App() {
   const [bracketScores, setBracketScores] = useLocalStorage("wc2026_bracket", {});
 
   // Predicțiile fazei grupelor — sincronizate cu Supabase
-  const { predictionsMap, savePrediction } = usePredictions();
+  const { predictionsMap, savePrediction, clearPredictions } = usePredictions();
 
   // handleScoreChange are aceeași semnătură ca înainte — zero schimbări în componente child
   const handleScoreChange = useCallback((group, idx, score) => {
@@ -34,11 +34,11 @@ export default function App() {
   const handleReset = () => {
     if (window.confirm("Ești sigur că vrei să resetezi toate predicțiile? Această acțiune nu poate fi anulată.")) {
       localStorage.removeItem("wc2026_tab");
-      localStorage.removeItem("wc2026_scores");
+      localStorage.removeItem("wc2026_scores"); // deși clearPredictions îl va șterge, îl lăsăm preventiv
       localStorage.removeItem("wc2026_bracket");
       setActiveTab("schedule");
       setBracketScores({});
-      // predictionsMap se va reîncărca automat din Supabase (gol dacă userul nu a mai salvat)
+      clearPredictions();
     }
   };
 

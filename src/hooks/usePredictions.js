@@ -12,7 +12,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import { fetchUserPredictions, upsertPrediction } from "../lib/db";
+import { fetchUserPredictions, upsertPrediction, deleteAllPredictions } from "../lib/db";
 
 const LS_KEY = "wc2026_scores";
 
@@ -149,5 +149,21 @@ export function usePredictions() {
     }
   }, [user?.id]);
 
-  return { predictionsMap, loadingPredictions, savePrediction };
+  // ── Curățare predicții ───────────────────────────────────────────────────────
+  const clearPredictions = useCallback(async () => {
+    if (!user) return;
+    
+    // 1. Curățăm starea locală și localStorage imediat (UI rapid)
+    setPredictionsMap({});
+    localStorage.removeItem(LS_KEY);
+
+    // 2. Ștergem toate predicțiile utilizatorului din baza de date
+    try {
+      await deleteAllPredictions(user.id);
+    } catch (e) {
+      console.error("Eroare la ștergerea predicțiilor din baza de date:", e);
+    }
+  }, [user]);
+
+  return { predictionsMap, loadingPredictions, savePrediction, clearPredictions };
 }

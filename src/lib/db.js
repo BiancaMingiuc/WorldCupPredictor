@@ -145,3 +145,17 @@ export async function deletePrediction(userId, matchId) {
 
   if (error) throw error;
 }
+
+/**
+ * Șterge toate predicțiile unui utilizator.
+ * @param {string} userId
+ * @returns {Promise<void>}
+ */
+export async function deleteAllPredictions(userId) {
+  const { error } = await supabase
+    .from("predictions")
+    .delete()
+    .eq("user_id", userId);
+
+  if (error) throw error;
+}

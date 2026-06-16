@@ -1,12 +1,17 @@
 import { useCallback } from "react";
+import { Loader2 } from "lucide-react";
+import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
+import GroupStagePage from "./pages/GroupStagePage";
 import SchedulePage from "./pages/SchedulePage";
 import GroupStandingsPage from "./pages/GroupStandingsPage";
 import ThirdPlacePage from "./pages/ThirdPlacePage";
 import BracketPage from "./pages/BracketPage";
+import AuthPage from "./pages/AuthPage";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
 export default function App() {
+  const { user, loading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useLocalStorage("wc2026_tab", "schedule");
   const [scoresMap, setScoresMap] = useLocalStorage("wc2026_scores", {});
   const [bracketScores, setBracketScores] = useLocalStorage("wc2026_bracket", {});
@@ -36,6 +41,26 @@ export default function App() {
     }
   };
 
+  // ── 1. Loading sesiune ───────────────────────────────────────────────────────
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#000000] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00FF87] to-[#7A00FF] flex items-center justify-center">
+            <Loader2 size={22} className="text-black animate-spin" />
+          </div>
+          <p className="text-white/40 text-sm font-medium">Se încarcă...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── 2. Neautentificat → pagina de login ─────────────────────────────────────
+  if (!user) {
+    return <AuthPage />;
+  }
+
+  // ── 3. Autentificat → aplicația principală ──────────────────────────────────
   return (
     <div className="min-h-screen bg-[#000000] text-white">
       {/* Ambient background glow */}
@@ -45,7 +70,13 @@ export default function App() {
         <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[600px] h-96 bg-[#00E5FF]/3 rounded-full blur-3xl" />
       </div>
 
-      <Navbar activeTab={activeTab} onTabChange={setActiveTab} onReset={handleReset} />
+      <Navbar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onReset={handleReset}
+        user={user}
+        onSignOut={signOut}
+      />
 
       <main className="relative z-10">
         {activeTab === "schedule" && (
@@ -53,6 +84,9 @@ export default function App() {
         )}
         {activeTab === "standings" && (
           <GroupStandingsPage scoresMap={scoresMap} />
+        )}
+        {activeTab === "groups" && (
+          <GroupStagePage scoresMap={scoresMap} onScoreChange={handleScoreChange} />
         )}
         {activeTab === "third" && (
           <ThirdPlacePage scoresMap={scoresMap} />

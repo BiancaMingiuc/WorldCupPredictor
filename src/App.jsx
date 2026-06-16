@@ -9,19 +9,20 @@ import ThirdPlacePage from "./pages/ThirdPlacePage";
 import BracketPage from "./pages/BracketPage";
 import AuthPage from "./pages/AuthPage";
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import { usePredictions } from "./hooks/usePredictions";
 
 export default function App() {
   const { user, loading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useLocalStorage("wc2026_tab", "schedule");
-  const [scoresMap, setScoresMap] = useLocalStorage("wc2026_scores", {});
   const [bracketScores, setBracketScores] = useLocalStorage("wc2026_bracket", {});
 
+  // Predicțiile fazei grupelor — sincronizate cu Supabase
+  const { predictionsMap, savePrediction } = usePredictions();
+
+  // handleScoreChange are aceeași semnătură ca înainte — zero schimbări în componente child
   const handleScoreChange = useCallback((group, idx, score) => {
-    setScoresMap((prev) => ({
-      ...prev,
-      [`${group}_${idx}`]: score,
-    }));
-  }, [setScoresMap]);
+    savePrediction(group, idx, score);
+  }, [savePrediction]);
 
   const handleBracketScoreChange = useCallback((matchId, score) => {
     setBracketScores((prev) => ({
@@ -36,8 +37,8 @@ export default function App() {
       localStorage.removeItem("wc2026_scores");
       localStorage.removeItem("wc2026_bracket");
       setActiveTab("schedule");
-      setScoresMap({});
       setBracketScores({});
+      // predictionsMap se va reîncărca automat din Supabase (gol dacă userul nu a mai salvat)
     }
   };
 
@@ -80,20 +81,20 @@ export default function App() {
 
       <main className="relative z-10">
         {activeTab === "schedule" && (
-          <SchedulePage scoresMap={scoresMap} onScoreChange={handleScoreChange} />
+          <SchedulePage scoresMap={predictionsMap} onScoreChange={handleScoreChange} />
         )}
         {activeTab === "standings" && (
-          <GroupStandingsPage scoresMap={scoresMap} />
+          <GroupStandingsPage scoresMap={predictionsMap} />
         )}
         {activeTab === "groups" && (
-          <GroupStagePage scoresMap={scoresMap} onScoreChange={handleScoreChange} />
+          <GroupStagePage scoresMap={predictionsMap} onScoreChange={handleScoreChange} />
         )}
         {activeTab === "third" && (
-          <ThirdPlacePage scoresMap={scoresMap} />
+          <ThirdPlacePage scoresMap={predictionsMap} />
         )}
         {activeTab === "bracket" && (
           <BracketPage
-            scoresMap={scoresMap}
+            scoresMap={predictionsMap}
             bracketScores={bracketScores}
             onBracketScoreChange={handleBracketScoreChange}
           />

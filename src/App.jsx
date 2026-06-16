@@ -1,12 +1,13 @@
 import { useCallback } from "react";
 import Navbar from "./components/Navbar";
-import GroupStagePage from "./pages/GroupStagePage";
+import SchedulePage from "./pages/SchedulePage";
+import GroupStandingsPage from "./pages/GroupStandingsPage";
 import ThirdPlacePage from "./pages/ThirdPlacePage";
 import BracketPage from "./pages/BracketPage";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useLocalStorage("wc2026_tab", "groups");
+  const [activeTab, setActiveTab] = useLocalStorage("wc2026_tab", "schedule");
   const [scoresMap, setScoresMap] = useLocalStorage("wc2026_scores", {});
   const [bracketScores, setBracketScores] = useLocalStorage("wc2026_bracket", {});
 
@@ -29,7 +30,7 @@ export default function App() {
       localStorage.removeItem("wc2026_tab");
       localStorage.removeItem("wc2026_scores");
       localStorage.removeItem("wc2026_bracket");
-      setActiveTab("groups");
+      setActiveTab("schedule");
       setScoresMap({});
       setBracketScores({});
     }
@@ -47,8 +48,11 @@ export default function App() {
       <Navbar activeTab={activeTab} onTabChange={setActiveTab} onReset={handleReset} />
 
       <main className="relative z-10">
-        {activeTab === "groups" && (
-          <GroupStagePage scoresMap={scoresMap} onScoreChange={handleScoreChange} />
+        {activeTab === "schedule" && (
+          <SchedulePage scoresMap={scoresMap} onScoreChange={handleScoreChange} />
+        )}
+        {activeTab === "standings" && (
+          <GroupStandingsPage scoresMap={scoresMap} />
         )}
         {activeTab === "third" && (
           <ThirdPlacePage scoresMap={scoresMap} />

@@ -1,9 +1,10 @@
-import { Trophy, RotateCcw, Users, Award, GitBranch } from "lucide-react";
+import { Trophy, RotateCcw, Award, GitBranch, CalendarDays, BarChart3 } from "lucide-react";
 
 const TABS = [
-  { id: "groups",  label: "Faza Grupelor",       shortLabel: "Grupe",   icon: Users },
-  { id: "third",   label: "Locuri 3",             shortLabel: "Loc 3",   icon: Award },
-  { id: "bracket", label: "Tablou Eliminatoriu",  shortLabel: "Bracket", icon: GitBranch },
+  { id: "schedule",  label: "Program Meciuri",      shortLabel: "Program",  icon: CalendarDays },
+  { id: "standings", label: "Clasament Grupe",       shortLabel: "Clasament", icon: BarChart3 },
+  { id: "third",     label: "Locuri 3",              shortLabel: "Loc 3",    icon: Award },
+  { id: "bracket",   label: "Tablou Eliminatoriu",   shortLabel: "Bracket",  icon: GitBranch },
 ];
 
 export default function Navbar({ activeTab, onTabChange, onReset }) {

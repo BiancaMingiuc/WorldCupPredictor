@@ -167,7 +167,7 @@ Match IDs: 73–104
 ### 4.2 R32 — Round of 32 Slot Assignments
 
 | Match | Team 1 | Team 2 |
-|-------|--------|--------|
+-------|--------|--------|
 | 73 | 2nd A | 2nd B |
 | 74 | 1st E | Best 3rd (A/B/C/D/F) |
 | 75 | 1st F | 2nd C |
@@ -184,7 +184,7 @@ Match IDs: 73–104
 | 86 | 1st J | 2nd H |
 | 87 | 1st K | Best 3rd (D/E/I/J/L) |
 | 88 | 2nd D | 2nd G |
-
+|
 ### 4.3 R16 → QF → SF Bracket Path
 
 ```

@@ -1,58 +1,9 @@
 import { useMemo } from "react";
 import { CalendarDays, CheckCircle2, Clock } from "lucide-react";
 import { GROUPS } from "../data/teams";
-import { GROUP_MATCHES } from "../data/schedule";
+import { GROUP_MATCHES, buildFlatSchedule } from "../data/schedule";
 import { matchKey } from "../utils/groupLogic";
 import MatchInput from "../components/MatchInput";
-
-// Build a flat list of all matches with group + team info, then sort by date+time
-function buildFlatSchedule() {
-  const dateOrder = {
-    "11 iunie": 11,
-    "12 iunie": 12,
-    "13 iunie": 13,
-    "14 iunie": 14,
-    "15 iunie": 15,
-    "16 iunie": 16,
-    "17 iunie": 17,
-    "18 iunie": 18,
-    "19 iunie": 19,
-    "20 iunie": 20,
-    "21 iunie": 21,
-    "22 iunie": 22,
-    "23 iunie": 23,
-    "24 iunie": 24,
-    "25 iunie": 25,
-    "26 iunie": 26,
-    "27 iunie": 27,
-    "28 iunie": 28,
-  };
-
-  const all = [];
-  for (const [grp, matches] of Object.entries(GROUP_MATCHES)) {
-    const teams = GROUPS[grp];
-    for (const m of matches) {
-      const t1 = teams.find((t) => t.id === m.t1);
-      const t2 = teams.find((t) => t.id === m.t2);
-      all.push({ ...m, group: grp, team1: t1, team2: t2 });
-    }
-  }
-
-  all.sort((a, b) => {
-    const dayA = dateOrder[a.date] ?? 99;
-    const dayB = dateOrder[b.date] ?? 99;
-    if (dayA !== dayB) return dayA - dayB;
-    // Sort by time: "22:00" etc. — treat midnight-crossing times (00-09 h) as next-day
-    const toMin = (t) => {
-      const [h, m] = t.split(":").map(Number);
-      // Times 00-09 are actually "next day" (late night) — put them after 20+
-      return h < 10 ? h * 60 + m + 1440 : h * 60 + m;
-    };
-    return toMin(a.time) - toMin(b.time);
-  });
-
-  return all;
-}
 
 const FLAT_SCHEDULE = buildFlatSchedule();
 

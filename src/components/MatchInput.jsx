@@ -1,9 +1,11 @@
 import { memo } from "react";
+import { getMatchStatus } from "../utils/dateLogic";
 
 // MatchInput — score + disciplinary inputs (neutral field, mobile-first)
 // Cards appear directly under each team name
 const MatchInput = memo(function MatchInput({ match, score, groupLetter, onScoreChange }) {
   const { team1, team2, date, time } = match;
+  const status = getMatchStatus(date, time);
 
   const val = (field) =>
     score?.[field] !== undefined && score?.[field] !== null ? score[field] : "";
@@ -16,18 +18,37 @@ const MatchInput = memo(function MatchInput({ match, score, groupLetter, onScore
 
   const hasScore = val("g1") !== "" && val("g2") !== "";
 
+  // Styling based on status
+  const isPast = status === 'past';
+  const opacityClass = isPast && !hasScore ? "opacity-60 grayscale-[0.3]" : "";
+
   return (
     <div
-      className={`rounded-2xl border transition-all duration-300 p-3 sm:p-4 hover:border-white/10 ${hasScore
+      className={`rounded-2xl border transition-all duration-300 p-3 sm:p-4 hover:border-white/10 ${opacityClass} ${hasScore
         ? "border-[#00FF87]/25 bg-gradient-to-r from-[#00FF87]/3 to-transparent"
         : "border-white/5 bg-[#111118]"
         }`}
     >
-      {/* Date / Time */}
-      <div className="text-white/30 text-xs font-medium mb-3 flex items-center gap-1.5">
-        <span>{date}</span>
-        <span className="text-white/15">·</span>
-        <span className="text-[#00E5FF]/60">{time}</span>
+      {/* Date / Time / Status */}
+      <div className="text-white/30 text-xs font-medium mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <span>{date}</span>
+          <span className="text-white/15">·</span>
+          <span className="text-[#00E5FF]/60">{time}</span>
+        </div>
+        
+        {/* Status Indicator */}
+        {status === 'live' && (
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#00FF87]/10 border border-[#00FF87]/30">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#00FF87] animate-pulse" />
+            <span className="text-[#00FF87] text-[10px] font-bold tracking-wider uppercase">Live</span>
+          </div>
+        )}
+        {status === 'past' && (
+          <div className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10">
+            <span className="text-white/40 text-[10px] font-bold tracking-wider uppercase">Final</span>
+          </div>
+        )}
       </div>
 
       {/* Main row: [team1 + cards] [score] [team2 + cards] */}

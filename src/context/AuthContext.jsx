@@ -1,7 +1,24 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { upsertProfile } from "../lib/db";
 
 const AuthContext = createContext(null);
+
+/**
+ * Se asigură că există un rând în public.users pentru userul autentificat.
+ * Necessar pentru userii care s-au înregistrat înainte ca schema să existe.
+ */
+async function ensureProfile(user) {
+  if (!user) return;
+  try {
+    await upsertProfile(user.id, {
+      nume: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "",
+      avatar: user.user_metadata?.avatar_url ?? null,
+    });
+  } catch {
+    // Silențios — nu blocăm login-ul dacă profilul nu poate fi creat
+  }
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -10,14 +27,18 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     // Obține sesiunea curentă la montare
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setUser(u);
       setLoading(false);
+      ensureProfile(u); // garantează existența profilului
     });
 
     // Ascultă schimbările de stare auth (login / logout / refresh token)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setUser(u);
       setLoading(false);
+      ensureProfile(u); // garantează existența profilului la fiecare login
     });
 
     return () => subscription.unsubscribe();

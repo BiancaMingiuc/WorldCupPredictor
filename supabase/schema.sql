@@ -89,9 +89,12 @@ ALTER TABLE public.users       ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.matches     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.predictions ENABLE ROW LEVEL SECURITY;
 
--- users: oricine poate citi, doar proprietarul poate modifica
+-- users: oricine poate citi, doar proprietarul poate insera/modifica
 CREATE POLICY "users_select_all"
   ON public.users FOR SELECT USING (true);
+
+CREATE POLICY "users_insert_own"
+  ON public.users FOR INSERT WITH CHECK (auth.uid() = id);
 
 CREATE POLICY "users_update_own"
   ON public.users FOR UPDATE USING (auth.uid() = id);

@@ -7,6 +7,7 @@ import SchedulePage from "./pages/SchedulePage";
 import GroupStandingsPage from "./pages/GroupStandingsPage";
 import ThirdPlacePage from "./pages/ThirdPlacePage";
 import BracketPage from "./pages/BracketPage";
+import CalendarPage from "./pages/CalendarPage";
 import AuthPage from "./pages/AuthPage";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { usePredictions } from "./hooks/usePredictions";
@@ -83,8 +84,11 @@ export default function App() {
         {activeTab === "schedule" && (
           <SchedulePage scoresMap={predictionsMap} onScoreChange={handleScoreChange} />
         )}
+        {activeTab === "calendar" && (
+          <CalendarPage scoresMap={predictionsMap} onScoreChange={handleScoreChange} />
+        )}
         {activeTab === "standings" && (
-          <GroupStandingsPage scoresMap={predictionsMap} />
+          <GroupStandingsPage scoresMap={predictionsMap} onScoreChange={handleScoreChange} />
         )}
         {activeTab === "groups" && (
           <GroupStagePage scoresMap={predictionsMap} onScoreChange={handleScoreChange} />

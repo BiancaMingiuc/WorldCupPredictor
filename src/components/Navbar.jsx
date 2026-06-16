@@ -2,6 +2,7 @@ import { Trophy, RotateCcw, Award, GitBranch, CalendarDays, BarChart3, LogOut, U
 
 const TABS = [
   { id: "schedule",  label: "Program Meciuri",      shortLabel: "Program",   icon: CalendarDays },
+  { id: "calendar",  label: "Calendar",             shortLabel: "Calendar",  icon: CalendarDays },
   { id: "standings", label: "Clasament Grupe",       shortLabel: "Clasament", icon: BarChart3 },
   { id: "third",     label: "Locuri 3",              shortLabel: "Loc 3",     icon: Award },
   { id: "bracket",   label: "Tablou Eliminatoriu",   shortLabel: "Bracket",   icon: GitBranch },

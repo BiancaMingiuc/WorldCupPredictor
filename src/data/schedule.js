@@ -1,3 +1,5 @@
+import { GROUPS } from "./teams";
+
 // Group stage matches - 6 per group (indices 0-5)
 // t1/t2 = team IDs (neutral field — no home/away distinction)
 // date is display string, time is Romanian local time
@@ -100,3 +102,49 @@ export const GROUP_MATCHES = {
     { idx: 5, t1: "cro", t2: "gha", date: "28 iunie", time: "00:00" },
   ],
 };
+
+export function buildFlatSchedule() {
+  const dateOrder = {
+    "11 iunie": 11,
+    "12 iunie": 12,
+    "13 iunie": 13,
+    "14 iunie": 14,
+    "15 iunie": 15,
+    "16 iunie": 16,
+    "17 iunie": 17,
+    "18 iunie": 18,
+    "19 iunie": 19,
+    "20 iunie": 20,
+    "21 iunie": 21,
+    "22 iunie": 22,
+    "23 iunie": 23,
+    "24 iunie": 24,
+    "25 iunie": 25,
+    "26 iunie": 26,
+    "27 iunie": 27,
+    "28 iunie": 28,
+  };
+
+  const all = [];
+  for (const [grp, matches] of Object.entries(GROUP_MATCHES)) {
+    const teams = GROUPS[grp];
+    for (const m of matches) {
+      const t1 = teams.find((t) => t.id === m.t1);
+      const t2 = teams.find((t) => t.id === m.t2);
+      all.push({ ...m, group: grp, team1: t1, team2: t2 });
+    }
+  }
+
+  all.sort((a, b) => {
+    const dayA = dateOrder[a.date] ?? 99;
+    const dayB = dateOrder[b.date] ?? 99;
+    if (dayA !== dayB) return dayA - dayB;
+    const toMin = (t) => {
+      const [h, m] = t.split(":").map(Number);
+      return h * 60 + m;
+    };
+    return toMin(a.time) - toMin(b.time);
+  });
+
+  return all;
+}

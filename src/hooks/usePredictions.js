@@ -63,7 +63,30 @@ export function usePredictions() {
       .then((remoteMap) => {
         if (cancelled) return;
 
-        // Merge: local are câmpurile de cartonașe (y1, y2 etc.)
+        // ── Migrare silențioasă localStorage → Supabase ─────────────────────
+        // Dacă userul nu are nicio predicție în cloud (primul login),
+        // dar are scoruri salvate local → le împingem automat în Supabase.
+        if (Object.keys(remoteMap).length === 0) {
+          const localScores = readLocalScores();
+          const toMigrate = Object.entries(localScores).filter(([, sc]) =>
+            sc.g1 !== "" && sc.g1 !== null && sc.g1 !== undefined &&
+            sc.g2 !== "" && sc.g2 !== null && sc.g2 !== undefined &&
+            !isNaN(parseInt(sc.g1, 10)) && !isNaN(parseInt(sc.g2, 10))
+          );
+
+          if (toMigrate.length > 0) {
+            // Batch upsert în background — fără nicio notificare vizuală
+            Promise.allSettled(
+              toMigrate.map(([matchId, sc]) =>
+                upsertPrediction(user.id, matchId, parseInt(sc.g1, 10), parseInt(sc.g2, 10))
+              )
+            );
+            // Nu așteptăm rezultatul — UI rămâne responsive
+          }
+        }
+
+        // ── Merge remote → local ─────────────────────────────────────────────
+        // local are câmpurile de cartonașe (y1, y2 etc.)
         // remote are g1/g2 authoritative
         setPredictionsMap((local) => {
           const merged = { ...local };
